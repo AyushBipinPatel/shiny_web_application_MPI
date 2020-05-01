@@ -1,0 +1,76 @@
+---
+title: "Cleaning Script Table 1 (Work in progress)"
+author: "Ayush Patel"
+date: "`r Sys.Date()`"
+output:
+ prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+
+Where is the data from?
+----
+
+The data is available on the website of OPHI. This is the [link](https://ophi.org.uk/multidimensional-poverty-index/mpi-resources/).
+
+The Table 1 has national MPI results for the year 2019.
+
+Libraries 
+---
+
+```{r}
+library(here) ### if you do not do this Jenny Bryan sets your computer on fire
+library(janitor)
+library(tidyverse)
+```
+
+To know why I use {here}, go to this [link](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/)
+
+Importing Data
+---
+
+The Table 1 has 7 sheets. names and numbered as following (as given in the excel file):
+
+__1.1 National MPI Results:__
+
+The table sorts 101 countries from low to high according to the Multidimensional Poverty Index (MPI) and presents the basic MPI results. 
+
+__1.2 Censored Headcounts__
+
+The table shows the proportion of people who are MPI poor and experience deprivations in each of the indicators. The table sorts 101 countries from low to high according to the Multidimensional Poverty Index (MPI). 
+
+__1.3 Contribution of Deprivation__
+
+The table shows the percentage contribution of each dimension and indicator to the MPI. The table sorts 101 countries from low to high according to the Multidimensional Poverty Index (MPI). 
+
+__1.4 MPI Results and complete data__
+
+The table sorts 101 countries from low to high according to their Multidimensional Poverty Index (MPI) score and compares that with external data such as income poverty figures, GNI per capita, Gini Index, HDI rank and income category. 
+
+__1.5 SEs and CIs__
+
+The table sorts countries from low to high according to the Multidimensional Poverty Index (MPI) and presents the standard errors and confidence intervals for the MPI and the headcount ratio. 
+
+__1.6 Raw Headcounts__
+
+The table shows the proportion of people who experience deprivations in each of the indicators. The table sorts 101 countries from low to high according to the Multidimensional Poverty Index (MPI). 
+
+__1.7 Sample size and Non-Response__
+
+The table reports the sample sizes from each survey that were used to compute the MPI. Reductions in sample sizes were due to missing data, as detailed in the columns by indicator. The table sorts 101 countries from low to high according to the Multidimensional Poverty Index (MPI).  
+
+
+From these 7 sheets the first 4 will be data of our focus. I will import and clean only the first 4 sheets.
+
+
+### Importing 1.1 National MPI Results.
+
+Before writing code for the data I like to open in it excel just to get the feel. One can do this from RStudi as well, however, I prefer looking at the data once in excel id possible. Here is how the data looks.
+
+![1.1 National MPI Results in Excel](excel_view_table1.1.png)
+
+As one can see that in order to improt the data in a clean manner we will need to skip some inintial rows. Moreover, we will have to think of how to deal with merged cells in the header or column name.
+
+As of now I am thinking of skipping first 9 rows and naming the columns in the next step. This sounds tedious though. The tediousness would become more amplified as the number of columns increase. What to do?
+
+<iframe src="https://giphy.com/embed/620sstUw533kVyN481" width="480" height="446" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/RussellBrunsonHQ-clickfunnels-russell-brunson-click-funnels-620sstUw533kVyN481">via GIPHY</a></p>

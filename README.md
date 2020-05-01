@@ -1,4 +1,4 @@
-# shiny_web_application_MPI
+# Creating a Shiny Web Application for global MPI
 
 INTRODUCTION and MOTIVATION
 ---------------------------------------

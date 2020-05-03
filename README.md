@@ -28,3 +28,4 @@ PROCESS (This section will be updated as I go)
 
 I will start with data cleaning scripts, will probably make these as Rmd notebooks so the code is as explainable as possible. We will start work with Table1.
 
+As on 3rd May 2020, cleaning of the table 1.1 of TABLE1 has been completed. I will proceed to create visualizations from this data (table1.1). Once that is done I will return to cleaning table 1.2 of TABLE1.... and so forth and so on. 

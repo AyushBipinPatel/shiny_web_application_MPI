@@ -1,0 +1,145 @@
+---
+title: 'MPI : Data Visualization'
+author: "Ayush Patel"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, include=FALSE}
+library(here)
+library(tidyverse)
+library(sf)
+library(mapview)
+library(readr)
+library(rgeos)
+library(rnaturalearth)
+library(rnaturalearthhires)
+library(shiny)
+library(ggiraph)
+```
+
+```{r data_import, include=FALSE}
+
+read_csv(file = "cleaned table1_1.csv") -> national_mpi_1.1
+
+rnaturalearth::ne_countries(scale = "large",returnclass = "sf") ->shape_world
+
+shape_world[,c(19,47,95)] -> shape_world
+
+left_join(shape_world, national_mpi_1.1, by = c("iso_a3" = "iso_country_code")) -> mapshape_mpi
+
+as.vector(unique(national_mpi_1.1$world_region)) -> All_world_regions
+All_world_regions[1] -> Europe_CentralAsia
+All_world_regions[2] -> ArabStates
+All_world_regions[3] -> LatinAmerica_TheCaribean
+All_world_regions[4] -> SouthAsia
+All_world_regions[5] -> EastAsia_ThePacific
+All_world_regions[6] -> SubSabaharnAfrica
+
+names(national_mpi_1.1)[c(3:9,11,14)] -> Choices_aes_axis
+
+Choices_aes_axis[1] -> Country
+Choices_aes_axis[2] -> WorldRegion
+Choices_aes_axis[3] -> MPI
+Choices_aes_axis[4] -> HeadcountRatio
+Choices_aes_axis[5] -> Intensity
+Choices_aes_axis[6] -> VlunerableToPoverty
+Choices_aes_axis[7] -> InSeverePoverty
+Choices_aes_axis[8] -> PopulationInYearOfSurvey
+Choices_aes_axis[9] -> MPIPoorInSurveyYear
+
+```
+
+National MPI Results
+==============================================
+
+MPI Choropleth by World Regions {.tabset}
+------------------------------------------------
+
+### Static Choropleth
+
+```{r choropleth, echo=FALSE}
+inputPanel(
+  selectInput("WorldRegion", label = "Select World Region",
+              choices = c(Europe_CentralAsia,
+                          ArabStates,
+                          LatinAmerica_TheCaribean,
+                          SouthAsia,
+                          EastAsia_ThePacific,
+                          SubSabaharnAfrica))
+)
+
+renderPlot({
+    mapshape_mpi %>% 
+    filter(world_region %in% input$WorldRegion) %>% 
+    ggplot()+
+    geom_sf(aes(fill = mpi),
+                        colour = "white", size = 0.2)+
+    scale_fill_viridis_c()+
+    theme(
+      panel.grid = element_blank(),
+      axis.line = element_blank(),
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      plot.background = element_rect(fill = "#D7DDE8",colour = NULL),
+      panel.background = element_rect(fill = "#D7DDE8", colour = NULL),
+      legend.background = element_rect(fill = "#D7DDE8", colour = NULL)
+    )
+  
+})
+
+```
+
+### Interactive Choropleth
+
+```{r choropleth_interactive, echo=FALSE}
+inputPanel(
+  selectInput("WorldRegion_Interactive", label = "Select World Region",
+              choices = c(Europe_CentralAsia,
+                          ArabStates,
+                          LatinAmerica_TheCaribean,
+                          SouthAsia,
+                          EastAsia_ThePacific,
+                          SubSabaharnAfrica))
+)
+
+renderGirafe({
+    mapshape_mpi %>% 
+    filter(world_region %in% input$WorldRegion_Interactive) %>% 
+    ggplot()+
+    geom_sf_interactive(aes(fill = mpi, tooltip = paste(
+      "Country:", name_long, "\nMPI (M):", mpi
+    )),
+                        colour = "white", size = 0.2)+
+    scale_fill_viridis_c()+
+    theme(
+      panel.grid = element_blank(),
+      axis.line = element_blank(),
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      plot.background = element_rect(fill = "#D7DDE8",colour = NULL),
+      panel.background = element_rect(fill = "#D7DDE8", colour = NULL),
+      legend.background = element_rect(fill = "#D7DDE8", colour = NULL)
+    )->M_choropleth
+    
+  girafe(ggobj = M_choropleth, width_svg = 16, height_svg = 12) %>% 
+    girafe_options(
+      opts_tooltip(
+        opacity = .8, 
+        css = "background-color:gray;color:white
+        ;padding:2px;border-radius:2px;"),
+      opts_sizing(width = 0.85,
+                  rescale = TRUE),
+      opts_zoom(min = 1,max = 3))
+})
+
+```

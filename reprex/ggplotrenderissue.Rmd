@@ -1,0 +1,47 @@
+---
+title: "Your Document Title"
+author: "Document Author"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, include=FALSE}
+
+library(tidyverse)
+library(shiny)
+
+```
+
+
+### iris ggplot (non interactive)
+
+```{r}
+iris %>% 
+  ggplot(aes(Petal.Length, Sepal.Length))+
+  geom_jitter(size = 2, alpha = 0.5)
+```
+
+### iris interactive ggplot (not functioning well)
+
+```{r}
+inputPanel(
+selectInput(inputId = "xaxis",label = "X-axis",choices = names(iris)),
+selectInput(inputId = "yaxis",label = "Y-axis",choices = names(iris))
+)
+
+renderPlot({
+  iris %>% 
+    ggplot(aes(input$xaxis, input$yaxis))+
+    geom_jitter( size = 2, alpha = 0.5)
+  
+})
+```
+

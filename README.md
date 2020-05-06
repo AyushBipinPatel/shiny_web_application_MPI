@@ -29,3 +29,8 @@ PROCESS (This section will be updated as I go)
 I will start with data cleaning scripts, will probably make these as Rmd notebooks so the code is as explainable as possible. We will start work with Table1.
 
 As on 3rd May 2020, cleaning of the table 1.1 of TABLE1 has been completed. I will proceed to create visualizations from this data (table1.1). Once that is done I will return to cleaning table 1.2 of TABLE1.... and so forth and so on. 
+
+The URL for the uploaded interactive document (a Rmd file with shiny widget) is [this](http://ayush-patel.shinyapps.io/Interactive_Documnet_MPI?_ga=2.267160393.698749113.1588778285-1890707637.1585288669)
+
+I have, at this point, encountered a problem. A interactive ggplot is not rendered in the markdown document as desired. I have posted a question on https://community.rstudio.com/, the link for the question is [here](https://community.rstudio.com/t/error-in-rendering-ggplot-with-shiny-components-widget-i-rmarkdown-file/64847)
+

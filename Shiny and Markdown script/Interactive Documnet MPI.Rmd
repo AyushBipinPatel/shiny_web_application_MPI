@@ -98,6 +98,7 @@ renderPlot({
 
 ```
 
+
 ### Interactive Choropleth
 
 ```{r choropleth_interactive, echo=FALSE}
@@ -143,3 +144,24 @@ renderGirafe({
 })
 
 ```
+
+
+```{r plocheck,echo=FALSE}
+national_mpi_1.1 %>% 
+  ggplot(aes(headcount_ratio, intensity))+
+  geom_jitter(aes(colour = mpi),alpha = 0.5, size = 2)
+```
+
+```{r sandbox, echo=FALSE}
+selectInput(inputId = "sb_xaxis",label = "X-axis",choices = names(national_mpi_1.1))
+selectInput(inputId = "sb_yaxis",label = "Y-axis",choices = names(national_mpi_1.1))
+selectInput(inputId = "sb_colour",label = "colour",choices = names(national_mpi_1.1))
+
+renderPlot({
+  national_mpi_1.1 %>% 
+    ggplot(aes(input$sb_xaxis, input$sb_yaxis))+
+    geom_jitter(aes(colour = input$sb_colour), size = 2, alpha = 0.5)
+  
+})
+```
+

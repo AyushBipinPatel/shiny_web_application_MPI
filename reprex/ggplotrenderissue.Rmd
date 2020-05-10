@@ -37,9 +37,11 @@ selectInput(inputId = "xaxis",label = "X-axis",choices = names(iris)),
 selectInput(inputId = "yaxis",label = "Y-axis",choices = names(iris))
 )
 
+
 renderPlot({
+  
   iris %>% 
-    ggplot(aes(input$xaxis, input$yaxis))+
+    ggplot(aes_string(input$xaxis, input$yaxis))+
     geom_jitter( size = 2, alpha = 0.5)
   
 })

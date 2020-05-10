@@ -34,3 +34,4 @@ The URL for the uploaded interactive document (a Rmd file with shiny widget) is 
 
 I have, at this point, encountered a problem. A interactive ggplot is not rendered in the markdown document as desired. I have posted a question on https://community.rstudio.com/, the link for the question is [here](https://community.rstudio.com/t/error-in-rendering-ggplot-with-shiny-components-widget-i-rmarkdown-file/64847)
 
+The above mentioned problem is solved. The above link has the solution. Moving onnn. 

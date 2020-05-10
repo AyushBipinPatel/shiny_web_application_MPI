@@ -3,8 +3,12 @@ title: 'MPI : Data Visualization'
 author: "Ayush Patel"
 date: "`r Sys.Date()`"
 output:
-  prettydoc::html_pretty:
-    theme: cayman
+  flexdashboard::flex_dashboard:
+    theme: flatly
+    orientation: rows
+    vertical_layout: scroll
+    source_code: embed
+    social: menu
 runtime: shiny
 ---
 
@@ -43,24 +47,12 @@ All_world_regions[4] -> SouthAsia
 All_world_regions[5] -> EastAsia_ThePacific
 All_world_regions[6] -> SubSabaharnAfrica
 
-names(national_mpi_1.1)[c(3:9,11,14)] -> Choices_aes_axis
-
-Choices_aes_axis[1] -> Country
-Choices_aes_axis[2] -> WorldRegion
-Choices_aes_axis[3] -> MPI
-Choices_aes_axis[4] -> HeadcountRatio
-Choices_aes_axis[5] -> Intensity
-Choices_aes_axis[6] -> VlunerableToPoverty
-Choices_aes_axis[7] -> InSeverePoverty
-Choices_aes_axis[8] -> PopulationInYearOfSurvey
-Choices_aes_axis[9] -> MPIPoorInSurveyYear
-
 ```
 
 National MPI Results
 ==============================================
 
-MPI Choropleth by World Regions {.tabset}
+MPI Choropleth by World Regions {.tabset data-height=1000}
 ------------------------------------------------
 
 ### Static Choropleth
@@ -145,23 +137,41 @@ renderGirafe({
 
 ```
 
+Sandbox {data-height=650}
+------------------------------------
 
-```{r plocheck,echo=FALSE}
-national_mpi_1.1 %>% 
-  ggplot(aes(headcount_ratio, intensity))+
-  geom_jitter(aes(colour = mpi),alpha = 0.5, size = 2)
-```
+### Choose Varibales {data-width=150 data-height=100}
 
 ```{r sandbox, echo=FALSE}
-selectInput(inputId = "sb_xaxis",label = "X-axis",choices = names(national_mpi_1.1))
-selectInput(inputId = "sb_yaxis",label = "Y-axis",choices = names(national_mpi_1.1))
-selectInput(inputId = "sb_colour",label = "colour",choices = names(national_mpi_1.1))
+inputPanel(
+selectInput(inputId = "sb_xaxis",
+            label = "X-axis",
+            choices = names(national_mpi_1.1),
+            selected = "headcount_ratio"),
+selectInput(inputId = "sb_yaxis",
+            label = "Y-axis",
+            choices = names(national_mpi_1.1),
+            selected = "intensity"),
+selectInput(inputId = "sb_colour",
+            label = "colour",
+            choices = names(national_mpi_1.1),
+            selected = "mpi")
+)
 
+```
+
+### Plot
+
+```{r sandplot, echo=FALSE}
 renderPlot({
   national_mpi_1.1 %>% 
-    ggplot(aes(input$sb_xaxis, input$sb_yaxis))+
-    geom_jitter(aes(colour = input$sb_colour), size = 2, alpha = 0.5)
+    ggplot(aes_string(input$sb_xaxis, input$sb_yaxis))+
+    geom_jitter(aes_string(colour = input$sb_colour), size = 7, alpha = 0.5)+
+    scale_colour_viridis_c()+
+    facet_wrap(~world_region)+
+    theme_minimal()
   
 })
 ```
 
+>Like all sandboxes this is vulnerable to gigo. Nevertheless, play arourd.
